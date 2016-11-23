@@ -6,6 +6,7 @@ import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -22,12 +23,9 @@ public class adminLoginTest {
 
     @Before
     public void start() {
-         //DesiredCapabilities caps = new DesiredCapabilities();
-        //caps.setCapability("unexpectedAlertBehaviour", "dismiss");
-       // driver = new ChromeDriver(caps);
 
-
-
+        // Chrome
+/*
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized");
         driver = new ChromeDriver(options);
@@ -35,6 +33,50 @@ public class adminLoginTest {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 10);
         System.out.println(((HasCapabilities) driver).getCapabilities());
+*/
+        // Firefox
+
+        driver = new FirefoxDriver();
+        driver.manage().window().maximize();
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        wait = new WebDriverWait(driver, 10);
+        System.out.println(((HasCapabilities) driver).getCapabilities());
+
+
+        // Firefox Nightly
+/*
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability("binary", "C:\\Program Files\\Nightly\\firefox.exe");
+        driver = new FirefoxDriver(caps);
+        driver.manage().window().maximize();
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        wait = new WebDriverWait(driver, 10);
+        System.out.println(((HasCapabilities) driver).getCapabilities());
+*/
+        // Firefox-old
+/*
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability(FirefoxDriver.MARIONETTE, false);
+        driver = new FirefoxDriver(caps);
+        driver.manage().window().maximize();
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        wait = new WebDriverWait(driver, 10);
+        System.out.println(((HasCapabilities) driver).getCapabilities());
+*/
+        // IE
+/*
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+        driver = new InternetExplorerDriver(caps);
+        driver.manage().window().maximize();
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        wait = new WebDriverWait(driver, 10);
+        System.out.println(((HasCapabilities) driver).getCapabilities());
+*/
     }
 
     @Test
