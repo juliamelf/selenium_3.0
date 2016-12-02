@@ -1,32 +1,43 @@
+package testBase;
+
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.MarionetteDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by korotkovay on 22.11.2016.
+ * Created by korotkovay on 29.11.2016.
  */
-public class adminLoginTest {
+public class TestBase {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
+    public WebDriver driver;
+    public WebDriverWait wait;
+
+    public boolean isElementPresent(By locator) {
+        try {
+            driver.findElement(locator);
+            return true;
+        } catch (NoSuchElementException ex) {
+            return false;
+        }
+    }
+
+    public boolean areElementsPresent(WebDriver driver, By locator) {
+        return driver.findElements(locator).size() > 0;
+    }
+
 
     @Before
     public void start() {
-
         // Chrome
-/*
+
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized");
         driver = new ChromeDriver(options);
@@ -34,7 +45,7 @@ public class adminLoginTest {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 10);
         System.out.println(((HasCapabilities) driver).getCapabilities());
-*/
+
         // Firefox
 /*
         driver = new FirefoxDriver();
@@ -85,15 +96,7 @@ public class adminLoginTest {
         wait = new WebDriverWait(driver, 10);
         System.out.println(((HasCapabilities) driver).getCapabilities());
 */
-    }
 
-    @Test
-    public void testAdminLogin() {
-        driver.navigate().to("http://localhost/litecart/admin/");
-        driver.findElement(By.name("username")).sendKeys("admin");
-        driver.findElement(By.name("password")).sendKeys("admin");
-        driver.findElement(By.name("login")).click();
-        driver.findElement(By.xpath("//a[@title=\"Logout\"]")).click();
     }
 
     @After
@@ -101,5 +104,4 @@ public class adminLoginTest {
         driver.quit();
         driver = null;
     }
-
 }

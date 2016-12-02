@@ -11,6 +11,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>adminLogin</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>../adminTest</module>
+    </modules>
 
     <dependencies>
         <dependency>
