@@ -18,7 +18,7 @@ public class adminLoginTest extends TestBase {
         driver.findElement(By.name("username")).sendKeys("admin");
         driver.findElement(By.name("password")).sendKeys("admin");
         driver.findElement(By.name("login")).click();
-        driver.findElement(By.xpath("//a[@title=\"Logout\"]")).click();
+        driver.findElement(By.xpath("//a[@title='Logout']")).click();
     }
 
 }
