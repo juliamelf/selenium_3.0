@@ -2,6 +2,7 @@ package tests;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import testBase.TestBase;
 
 /**
@@ -25,6 +26,10 @@ public class litecartUserRegistrationTest extends TestBase{
         driver.findElement(By.name("address1")).sendKeys("Street 1");
         driver.findElement(By.name("postcode")).sendKeys("123456");
         driver.findElement(By.name("city")).sendKeys("City");
+
+        driver.findElement(By.xpath("//span[contains(@id,'select')]")).click();
+        driver.findElement(By.xpath("//input[contains(@class,'select')]")).sendKeys("Angola" + Keys.ENTER);
+
         String email = "email" + userId + "@mail.ru";
         driver.findElement(By.name("email")).sendKeys(email);
         driver.findElement(By.name("phone")).sendKeys("+79991234556");
@@ -34,6 +39,7 @@ public class litecartUserRegistrationTest extends TestBase{
 
         //confirm registration
         driver.findElement(By.name("create_account")).click();
+
 
         //logout
         driver.findElement(By.xpath("//div[@id='box-account']//a[contains(@href,'logout')]")).click();
