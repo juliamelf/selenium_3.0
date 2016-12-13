@@ -3,6 +3,8 @@ package tests;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import testBase.TestBase;
 
 /**
@@ -34,7 +36,8 @@ public class adminAddProductTest extends TestBase{
         driver.findElement(By.name("name[en]")).sendKeys(productName);
 
         //Code
-        driver.findElement(By.name("code")).sendKeys("test 123");
+        String productCode = "test 123";
+        driver.findElement(By.name("code")).sendKeys(productCode);
 
         //Categories
         driver.findElement(By.cssSelector("td>input[value='1']")).click();
@@ -49,45 +52,74 @@ public class adminAddProductTest extends TestBase{
         driver.findElement(By.name("quantity")).clear();
         driver.findElement(By.name("quantity")).sendKeys("25");
 
-        //Quantity Unit
-
-        //Delivery Status
-
         //Sold Out Status
         driver.findElement(By.name("sold_out_status_id")).click();
         driver.findElement(By.cssSelector("select[name='sold_out_status_id']>option[value='2']")).click();
 
         //Upload Image
+        WebElement image = driver.findElement(By.name("new_images[]"));
+        //image.click();
+        image.sendKeys("C:/Users/KorotkovaY.T1GROUP/Pictures/bender.jpg");
 
         //Date Valid From
+        driver.findElement(By.name("date_valid_from")).sendKeys(Keys.HOME + "12-12-2016");
 
         //Date Valid To
+        driver.findElement(By.name("date_valid_to")).sendKeys(Keys.HOME + "12-12-2017");
+
+        //Information Tab
+        driver.findElement(By.cssSelector("a[href='#tab-information']")).click();
 
         //Manufacturer
-
-        //Supplier
+        driver.findElement(By.name("manufacturer_id")).click();
+        driver.findElement(By.cssSelector("select[name='manufacturer_id']>option[value='1']")).click();
 
         //Keywords
+        String keywords = "test product";
+        driver.findElement(By.name("keywords")).sendKeys(keywords);
 
         //Short Description
+        String shortDesc = "test description";
+        driver.findElement(By.name("short_description[en]")).sendKeys(shortDesc);
 
         //Description
+        String fullDesc = "full description";
+        driver.findElement(By.name("description[en]")).sendKeys(fullDesc);
 
         //Head Title
+        String headTitle = "test title";
+        driver.findElement(By.name("head_title[en]")).sendKeys(headTitle);
 
         //Meta Description
+        String meta = "test meta description";
+        driver.findElement(By.name("meta_description[en]")).sendKeys(meta);
+
+        //Prices tab
+        driver.findElement(By.cssSelector("a[href='#tab-prices']")).click();
 
         //Purchase Price
-
-        //Tax Class
+        driver.findElement(By.name("purchase_price")).clear();
+        driver.findElement(By.name("purchase_price")).sendKeys("100");
+        driver.findElement(By.name("purchase_price_currency_code")).click();
+        driver.findElement(By.cssSelector("select[name='purchase_price_currency_code']>option[value='USD']")).click();
 
         //Price USD
+        driver.findElement(By.name("prices[USD]")).clear();
+        driver.findElement(By.name("prices[USD]")).sendKeys(Keys.HOME + "100");
 
         //Price EUR
+        Assert.assertEquals("72.60", driver.findElement(By.name("prices[EUR]")).getAttribute("placeholder"));
 
+        //Save Product
         driver.findElement(By.name("save")).click();
 
+        //go to product catalog
+        driver.findElement(By.xpath("//li[@id='app-']/a[contains(@href, 'catalog')]")).click();
+        driver.findElement(By.xpath("//li[@id='doc-catalog']/a")).click();
 
+        //Check created product
+        driver.findElement(By.linkText(productName)).click();
+        Assert.assertEquals(productName, driver.findElement(By.name("name[en]")).getAttribute("value"));
 
 
     }
