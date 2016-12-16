@@ -42,8 +42,8 @@ public class TestBase {
         options.addArguments("start-maximized");
         driver = new ChromeDriver(options);
 
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        wait = new WebDriverWait(driver, 10);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); //неявное ожидание
+        wait = new WebDriverWait(driver, 10); //явное ожидание
         System.out.println(((HasCapabilities) driver).getCapabilities());
 
         // Firefox
