@@ -27,11 +27,11 @@ public class litecartCartTest extends TestBase{
         addProduct(0);
         checkCartQuantity(1);
 
-        //Add first product
+        //Add second product
         addProduct(1);
         checkCartQuantity(2);
 
-        //Add first product
+        //Add third product
         addProduct(2);
         checkCartQuantity(3);
 
