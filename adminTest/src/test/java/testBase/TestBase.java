@@ -53,9 +53,9 @@ public class TestBase {
 
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 10);
-        System.out.println(((HasCapabilities) driver).getCapabilities());
-*/
+       // System.out.println(((HasCapabilities) driver).getCapabilities());
 
+*/
         // Firefox Nightly
 /*
         DesiredCapabilities capabilities = DesiredCapabilities.firefox();

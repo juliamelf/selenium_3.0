@@ -20,6 +20,9 @@ public class litecartCartTest extends TestBase{
     @Test
     public void testAddToCart() {
 
+        //Go to Index page
+        openIndexPage();
+
         //Add first product
         addProduct(0);
         checkCartQuantity(1);
@@ -37,39 +40,40 @@ public class litecartCartTest extends TestBase{
 
         //Delete products from cart
         deleteProducts();
+    }
 
+
+
+    private void openIndexPage() {
+        driver.navigate().to("http://localhost/litecart/");
+    }
+
+    public void addProduct(int id) {
+        driver.findElement(By.xpath("//div[@id='box-category-tree']//a[@href='http://localhost/litecart/en/rubber-ducks-c-1/']")).click();
+        List<WebElement> products = driver.findElements(By.xpath("//ul[@class='listing-wrapper products']//a[@class='link']"));
+        products.get(id).click();
+        wait.until(elementToBeClickable(By.name("add_cart_product")));
+        driver.findElement(By.name("add_cart_product")).click();
+    }
+
+    public void checkCartQuantity(int id) {
+        Assert.assertTrue(isElementPresent(By.xpath("//div[@id='cart']//span[text() = '" + id + "']")));
+    }
+
+    private void openCart() {
+        driver.findElement(By.xpath("//div[@id='cart']/a[@class='link']")).click();
     }
 
     private void deleteProducts() {
         List<WebElement> products = driver.findElements(By.xpath("//div[@id='box-checkout-cart']//li[@class='item']"));
         driver.findElement(By.name("remove_cart_item")).click();
         wait.until(stalenessOf(products.get(0)));
-        Assert.assertEquals(2, driver.findElements(By.xpath("//div[@id='box-checkout-cart']//li[@class='shortcut']")).size());
+        wait.until(numberOfElementsToBe(By.xpath("//div[@id='box-checkout-cart']//li[@class='shortcut']"), 2));
         driver.findElement(By.name("remove_cart_item")).click();
         wait.until(stalenessOf(products.get(1)));
-        Assert.assertEquals(1, driver.findElements(By.xpath("//div[@id='box-checkout-cart']//li[@class='shortcut']")).size());
-        //driver.findElement(By.name("remove_cart_item")).click();
-        //wait.until(stalenessOf(products.get(2)));
-       // Assert.assertEquals(0, driver.findElements(By.xpath("//div[@id='box-checkout-cart']//li[@class='shortcut']")).size());
-    }
-
-
-    private void openCart() {
-        driver.findElement(By.xpath("//div[@id='cart']/a[@class='link']")).click();
-
-    }
-
-    public void addProduct(int id) {
-        driver.navigate().to("http://localhost/litecart/");
-        driver.findElement(By.xpath("//div[@id='box-category-tree']//a")).click();
-        List<WebElement> products = driver.findElements(By.xpath("//ul[@class='listing-wrapper products']//a[@class='link']"));
-        products.get(id).click();
-        driver.findElement(By.name("add_cart_product")).click();
-
-    }
-
-    public void checkCartQuantity(int id) {
-        Assert.assertTrue(isElementPresent(By.xpath("//div[@id='cart']//span[text() = '" + id + "']")));
+        wait.until(numberOfElementsToBe(By.xpath("//div[@id='box-checkout-cart']//li[@class='shortcut']"), 0));
+        driver.findElement(By.name("remove_cart_item")).click();
+        Assert.assertEquals("There are no items in your cart.", driver.findElement(By.cssSelector("div[id=\"checkout-cart-wrapper\"]>p>em")).getText());
     }
 
 
