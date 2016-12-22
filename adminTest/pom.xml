@@ -10,6 +10,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <dependencies>
+        <dependency>
+            <groupId>net.lightbody.bmp</groupId>
+            <artifactId>browsermob-core</artifactId>
+            <version>2.1.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <artifactId>adminTest</artifactId>
     <build>
         <plugins>

@@ -1,11 +1,11 @@
 package testBase;
 
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
 import org.junit.After;
 import org.junit.Before;
-import org.openqa.selenium.By;
-import org.openqa.selenium.HasCapabilities;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -31,6 +31,7 @@ public class TestBase {
 
     public EventFiringWebDriver driver;
     public WebDriverWait wait;
+    public BrowserMobProxy proxy;
 
     public boolean isElementPresent(By locator) {
         try {
@@ -75,8 +76,19 @@ public class TestBase {
         WebDriver driver = new RemoteWebDriver(new URL(hubURL), dc);
 */
 
-        // Chrome
 
+        //proxy
+
+        proxy = new BrowserMobProxyServer();
+        proxy.start(0);
+        Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability(CapabilityType.PROXY, seleniumProxy);
+        driver = new EventFiringWebDriver(new ChromeDriver(caps));
+        driver.register(new MyListener());
+
+        // Chrome
+/*
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized");
 
@@ -89,7 +101,7 @@ public class TestBase {
 
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); //неявное ожидание
         wait = new WebDriverWait(driver, 10); //явное ожидание
-
+*/
 
         // System.out.println(((HasCapabilities) driver).getCapabilities());
 
