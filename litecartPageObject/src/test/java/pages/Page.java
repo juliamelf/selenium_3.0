@@ -18,13 +18,4 @@ public class Page {
         this.driver = driver;
         wait = new WebDriverWait(driver, 10);
     }
-
-    public boolean isElementPresent(By locator) {
-        try {
-            driver.findElement(locator);
-            return true;
-        } catch (NoSuchElementException ex) {
-            return false;
-        }
-    }
 }

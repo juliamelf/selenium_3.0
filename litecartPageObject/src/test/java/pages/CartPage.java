@@ -21,20 +21,6 @@ public class CartPage extends Page {
         PageFactory.initElements(driver, this);
     }
 
-    private void openCart() {
-        driver.findElement(By.xpath("//div[@id='cart']/a[@class='link']")).click();
-    }
 
-    private void deleteProducts() {
-        List<WebElement> products = driver.findElements(By.xpath("//div[@id='box-checkout-cart']//li[@class='item']"));
-        driver.findElement(By.name("remove_cart_item")).click();
-        wait.until(stalenessOf(products.get(0)));
-        wait.until(numberOfElementsToBe(By.xpath("//div[@id='box-checkout-cart']//li[@class='shortcut']"), 2));
-        driver.findElement(By.name("remove_cart_item")).click();
-        wait.until(stalenessOf(products.get(1)));
-        wait.until(numberOfElementsToBe(By.xpath("//div[@id='box-checkout-cart']//li[@class='shortcut']"), 0));
-        driver.findElement(By.name("remove_cart_item")).click();
-        Assert.assertEquals("There are no items in your cart.", driver.findElement(By.cssSelector("div[id=\"checkout-cart-wrapper\"]>p>em")).getText());
-    }
 
 }

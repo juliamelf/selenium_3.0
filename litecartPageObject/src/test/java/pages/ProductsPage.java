@@ -21,21 +21,7 @@ public class ProductsPage extends Page {
         PageFactory.initElements(driver, this);
     }
 
-    public void openIndexPage() {
-        driver.navigate().to("http://localhost/litecart/");
-    }
 
-    public void addProduct(int id) {
-        driver.findElement(By.xpath("//div[@id='box-category-tree']//a[@href='http://localhost/litecart/en/rubber-ducks-c-1/']")).click();
-        List<WebElement> products = driver.findElements(By.xpath("//ul[@class='listing-wrapper products']//a[@class='link']"));
-        products.get(id).click();
-        wait.until(elementToBeClickable(By.name("add_cart_product")));
-        driver.findElement(By.name("add_cart_product")).click();
-    }
-
-    public void checkCartQuantity(int id) {
-        Assert.assertTrue(isElementPresent(By.xpath("//div[@id='cart']//span[text() = '" + id + "']")));
-    }
 
 
 }

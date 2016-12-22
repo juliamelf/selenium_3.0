@@ -13,7 +13,7 @@ public class LitecartCartTest extends TestBase{
 
         //Go to Index page
 
-        openIndexPage();
+        app.ApplicationopenIndexPage();
 
         //Add first product
         addProduct(0);

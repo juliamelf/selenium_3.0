@@ -48,8 +48,6 @@ public class TestBase {
     @Before
     public void start() throws Exception {
 
-
-
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized");
 
