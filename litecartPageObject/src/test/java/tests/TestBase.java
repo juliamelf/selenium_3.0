@@ -1,5 +1,6 @@
 package tests;
 
+import app.Application;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.By;
@@ -23,49 +24,25 @@ import java.util.logging.Level;
  */
 public class TestBase {
 
-    public EventFiringWebDriver driver;
-    public WebDriverWait wait;
-
-
-    public static class MyListener extends AbstractWebDriverEventListener {
-        @Override
-        public void beforeFindBy(By by, WebElement element, WebDriver driver) {
-            System.out.println(by);
-        }
-
-        @Override
-        public void afterFindBy(By by, WebElement element, WebDriver driver) {
-            System.out.println(by +  " found");
-        }
-
-        @Override
-        public void onException(Throwable throwable, WebDriver driver) {
-            System.out.println(throwable);
-        }
-    }
-
+    public static ThreadLocal<Application> tlApp = new ThreadLocal<>();
+    public Application app;
 
     @Before
-    public void start() throws Exception {
+    public void start() {
+        if (tlApp.get() != null) {
+            app = tlApp.get();
+            return;
+        }
 
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
+        app = new Application();
+        tlApp.set(app);
 
-        DesiredCapabilities cap = DesiredCapabilities.chrome();
-        LoggingPreferences logPrefs = new LoggingPreferences();
-        logPrefs.enable(LogType.BROWSER, Level.ALL);
-        cap.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
-        driver = new EventFiringWebDriver(new ChromeDriver(cap));
-        driver.register(new MyListener());
-
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); //неявное ожидание
-        wait = new WebDriverWait(driver, 10); //явное ожидание
-
+        Runtime.getRuntime().addShutdownHook(
+                new Thread(() -> { app.quit(); app = null; }));
     }
 
     @After
     public void stop() {
-        driver.quit();
-        driver = null;
+        app.quit();
     }
 }

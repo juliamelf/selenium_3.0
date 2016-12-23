@@ -21,7 +21,25 @@ public class ProductsPage extends Page {
         PageFactory.initElements(driver, this);
     }
 
+    @FindBy(xpath="//div[@id='box-category-tree']//a[@href='http://localhost/litecart/en/rubber-ducks-c-1/']")
+    public WebElement category;
 
+    @FindBy(xpath="//ul[@class='listing-wrapper products']//a[@class='link']")
+    public List<WebElement> products;
 
+    @FindBy(name="add_cart_product")
+    public WebElement addToCart;
+
+    public void openProductPage() {
+        driver.navigate().to("http://localhost/litecart/");
+    }
+
+    public void waitForButton() {
+        wait.until(elementToBeClickable(By.name("add_cart_product")));
+    }
+
+    public void checkCartQuantity(int id) {
+        Assert.assertTrue(isElementPresent(By.xpath("//div[@id='cart']//span[text() = '" + id + "']")));
+    }
 
 }

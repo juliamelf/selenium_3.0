@@ -2,7 +2,6 @@ package tests;
 
 import org.junit.Test;
 
-
 /**
  * Created by korotkovay on 14.12.2016.
  */
@@ -12,26 +11,25 @@ public class LitecartCartTest extends TestBase{
     public void testAddToCart() {
 
         //Go to Index page
-
-        app.ApplicationopenIndexPage();
+        app.openIndexPage();
 
         //Add first product
-        addProduct(0);
-        checkCartQuantity(1);
+        app.addProduct(0);
+        app.checkCartQuantity(1);
 
         //Add second product
-        addProduct(1);
-        checkCartQuantity(2);
+        app.addProduct(1);
+        app.checkCartQuantity(2);
 
         //Add third product
-        addProduct(2);
-        checkCartQuantity(3);
+        app.addProduct(2);
+        app.checkCartQuantity(3);
 
         //Go to Cart
-        openCart();
+        app.openCart();
 
         //Delete products from cart
-        deleteProducts();
+        app.deleteProducts();
     }
 
 

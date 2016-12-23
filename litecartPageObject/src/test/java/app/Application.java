@@ -1,37 +1,67 @@
 package app;
 
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.events.AbstractWebDriverEventListener;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.CartPage;
 import pages.ProductsPage;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfElementsToBe;
-import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 /**
  * Created by korotkovay on 22.12.2016.
  */
 public class Application {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
+    public EventFiringWebDriver driver;
+    public WebDriverWait wait;
 
     private ProductsPage productsPage;
     private CartPage cartPage;
 
-
     public Application() {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("start-maximized");
+
+        DesiredCapabilities cap = DesiredCapabilities.chrome();
+        LoggingPreferences logPrefs = new LoggingPreferences();
+        logPrefs.enable(LogType.BROWSER, Level.ALL);
+        cap.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
+        driver = new EventFiringWebDriver(new ChromeDriver(cap));
+        driver.register(new MyListener());
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); //неявное ожидание
+        wait = new WebDriverWait(driver, 10); //явное ожидание
+
         productsPage = new ProductsPage(driver);
         cartPage = new CartPage(driver);
+    }
+
+    public static class MyListener extends AbstractWebDriverEventListener {
+        @Override
+        public void beforeFindBy(By by, WebElement element, WebDriver driver) {
+            System.out.println(by);
+        }
+
+        @Override
+        public void afterFindBy(By by, WebElement element, WebDriver driver) {
+            System.out.println(by +  " found");
+        }
+
+        @Override
+        public void onException(Throwable throwable, WebDriver driver) {
+            System.out.println(throwable);
+        }
     }
 
     public void quit() {
@@ -39,44 +69,34 @@ public class Application {
     }
 
     public void openIndexPage() {
-        driver.navigate().to("http://localhost/litecart/");
+        productsPage.openProductPage();
     }
 
     public void addProduct(int id) {
-        driver.findElement(By.xpath("//div[@id='box-category-tree']//a[@href='http://localhost/litecart/en/rubber-ducks-c-1/']")).click();
-        List<WebElement> products = driver.findElements(By.xpath("//ul[@class='listing-wrapper products']//a[@class='link']"));
-        products.get(id).click();
-        wait.until(elementToBeClickable(By.name("add_cart_product")));
-        driver.findElement(By.name("add_cart_product")).click();
+        productsPage.category.click();
+        productsPage.products.get(id).click();
+        productsPage.waitForButton();
+        productsPage.addToCart.click();
     }
 
     public void checkCartQuantity(int id) {
-        Assert.assertTrue(isElementPresent(By.xpath("//div[@id='cart']//span[text() = '" + id + "']")));
+        productsPage.checkCartQuantity(id);
     }
 
-    private void openCart() {
-        driver.findElement(By.xpath("//div[@id='cart']/a[@class='link']")).click();
+    public void openCart() {
+
+        cartPage.openCart.click();
     }
 
-    private void deleteProducts() {
-        List<WebElement> products = driver.findElements(By.xpath("//div[@id='box-checkout-cart']//li[@class='item']"));
-        driver.findElement(By.name("remove_cart_item")).click();
-        wait.until(stalenessOf(products.get(0)));
-        wait.until(numberOfElementsToBe(By.xpath("//div[@id='box-checkout-cart']//li[@class='shortcut']"), 2));
-        driver.findElement(By.name("remove_cart_item")).click();
-        wait.until(stalenessOf(products.get(1)));
-        wait.until(numberOfElementsToBe(By.xpath("//div[@id='box-checkout-cart']//li[@class='shortcut']"), 0));
-        driver.findElement(By.name("remove_cart_item")).click();
-        Assert.assertEquals("There are no items in your cart.", driver.findElement(By.cssSelector("div[id=\"checkout-cart-wrapper\"]>p>em")).getText());
-    }
-
-    public boolean isElementPresent(By locator) {
-        try {
-            driver.findElement(locator);
-            return true;
-        } catch (NoSuchElementException ex) {
-            return false;
-        }
+    public void deleteProducts() {
+        cartPage.removeItem.click();
+        cartPage.waitUntilProductDisappear(0);
+        cartPage.waitUntilShortcutQuantityToBe(2);
+        cartPage.removeItem.click();
+        cartPage.waitUntilProductDisappear(1);
+        cartPage.waitUntilShortcutQuantityToBe(0);
+        cartPage.removeItem.click();
+        cartPage.assertNoItemsInCart();
     }
 
 }
